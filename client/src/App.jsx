@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import RoleProtectedRoute from './components/RoleProtectedRoute.jsx';
 import HomePage from './pages/HomePage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
 import ProductDetailPage from './pages/ProductDetailPage.jsx';
@@ -11,6 +12,8 @@ import CartPage from './pages/CartPage.jsx';
 import CheckoutPage from './pages/CheckoutPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+import SuperAdminDashboardPage from './pages/SuperAdminDashboardPage.jsx';
+import SubAdminDashboardPage from './pages/SubAdminDashboardPage.jsx';
 
 function App() {
   return (
@@ -51,6 +54,22 @@ function App() {
             <ProtectedRoute>
               <ProfilePage />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/super"
+          element={
+            <RoleProtectedRoute allowedRoles={['super_admin']}>
+              <SuperAdminDashboardPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/sub"
+          element={
+            <RoleProtectedRoute allowedRoles={['sub_admin']}>
+              <SubAdminDashboardPage />
+            </RoleProtectedRoute>
           }
         />
       </Route>

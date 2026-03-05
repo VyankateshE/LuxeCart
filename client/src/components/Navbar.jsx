@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 function Navbar() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, isSuperAdmin, isSubAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
   const onLogout = () => {
@@ -18,6 +18,8 @@ function Navbar() {
         </NavLink>
         <nav className="nav-links">
           <NavLink to="/products">Shop</NavLink>
+          {isSuperAdmin && <NavLink to="/admin/super">Super Admin</NavLink>}
+          {isSubAdmin && <NavLink to="/admin/sub">Sub Admin</NavLink>}
           {isAuthenticated && <NavLink to="/wishlist">Wishlist</NavLink>}
           {isAuthenticated && <NavLink to="/cart">Cart</NavLink>}
           {isAuthenticated && <NavLink to="/profile">Profile</NavLink>}

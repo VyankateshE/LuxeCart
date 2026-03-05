@@ -1,4 +1,6 @@
-import sequelize, { Product } from './models.js';
+import bcrypt from 'bcryptjs';
+import env from '../config/env.js';
+import sequelize, { Product, User } from './models.js';
 
 const sampleProducts = [
   {
@@ -125,6 +127,9 @@ const sampleProducts = [
 
 export const initializeDatabase = async () => {
   await sequelize.authenticate();
+  await sequelize.query(
+    "ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(20) NOT NULL DEFAULT 'customer'",
+  );
   await sequelize.sync();
 
   await Promise.all(
@@ -137,6 +142,23 @@ export const initializeDatabase = async () => {
   );
 
   console.log('Sample products synchronized.');
+
+  if (env.superAdminEmail && env.superAdminPassword && env.superAdminName) {
+    const existingSuperAdmin = await User.findOne({
+      where: { email: env.superAdminEmail },
+    });
+
+    if (!existingSuperAdmin) {
+      const hashed = await bcrypt.hash(env.superAdminPassword, 10);
+      await User.create({
+        name: env.superAdminName,
+        email: env.superAdminEmail,
+        password: hashed,
+        role: 'super_admin',
+      });
+      console.log('Super admin bootstrapped.');
+    }
+  }
 };
 
 export default initializeDatabase;

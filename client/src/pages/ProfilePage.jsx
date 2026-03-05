@@ -47,6 +47,9 @@ function ProfilePage() {
           <strong>Email:</strong> {user?.email}
         </p>
         <p>
+          <strong>Role:</strong> {user?.role}
+        </p>
+        <p>
           <strong>Member Since:</strong> {user?.created_at ? new Date(user.created_at).toLocaleDateString() : '--'}
         </p>
       </section>

@@ -6,6 +6,7 @@ const sanitizeUser = (user) => ({
   id: user.id,
   name: user.name,
   email: user.email,
+  role: user.role,
   created_at: user.created_at,
 });
 
@@ -18,8 +19,8 @@ export const registerUser = async ({ name, email, password }) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await createUser({ name, email, password: hashedPassword });
-  const token = signToken({ id: user.id, email: user.email });
+  const user = await createUser({ name, email, password: hashedPassword, role: 'customer' });
+  const token = signToken({ id: user.id, email: user.email, role: user.role });
 
   return { user: sanitizeUser(user), token };
 };
@@ -39,7 +40,7 @@ export const loginUser = async ({ email, password }) => {
     throw error;
   }
 
-  const token = signToken({ id: user.id, email: user.email });
+  const token = signToken({ id: user.id, email: user.email, role: user.role });
   return { user: sanitizeUser(user), token };
 };
 

@@ -19,6 +19,9 @@ Luxury-themed full-stack eCommerce web app using React (Vite), Node.js (Express)
 - Add/view/remove/update-quantity cart items + checkout endpoint
 - Add/view/remove wishlist items
 - Profile dashboard with order history and purchased items
+- RBAC roles: `customer`, `sub_admin`, `super_admin`
+- Super admin dashboard (metrics + sub-admin creation + product CRUD)
+- Sub admin dashboard (metrics + product CRUD)
 - Luxury responsive UI (black/gold palette, premium typography, smooth animations)
 - Loading skeletons, toasts, transitions, and product sorting
 
@@ -78,6 +81,9 @@ npm run dev:client
 - `JWT_SECRET=replace_with_long_random_secret`
 - `JWT_EXPIRES_IN=7d`
 - `STRIPE_SECRET_KEY=sk_test_...`
+- `SUPER_ADMIN_NAME=Super Admin`
+- `SUPER_ADMIN_EMAIL=superadmin@example.com`
+- `SUPER_ADMIN_PASSWORD=change_this_superadmin_password`
 
 ### `client/.env`
 - `VITE_API_BASE_URL=http://localhost:5000/api`
@@ -127,8 +133,10 @@ Base URL: `http://localhost:5000/api`
 - `GET /products`
   - query params (optional): `search`, `category`, `minPrice`, `maxPrice`
 - `GET /products/:id`
-- `POST /products`
+- `POST /products` (admin only: `super_admin`, `sub_admin`)
   - body: `{ name, description, price, category, imageUrl, stock, rating }`
+- `PUT /products/:id` (admin only)
+- `DELETE /products/:id` (admin only)
 
 ### Cart (Bearer token required)
 - `GET /cart`
@@ -153,6 +161,12 @@ Base URL: `http://localhost:5000/api`
 - `POST /payments/create-intent`
   - creates Stripe test-mode `PaymentIntent` from current cart total
   - response: `{ clientSecret, amount, currency }`
+
+### Admin (Bearer token required)
+- `GET /admin/overview` (`super_admin`, `sub_admin`)
+- `GET /admin/users` (`super_admin` only)
+- `POST /admin/sub-admins` (`super_admin` only)
+  - body: `{ "name": "Sub Admin", "email": "subadmin@example.com", "password": "secret123" }`
 
 ## Notes
 - This implementation follows MVC separation in backend: `routes`, `controllers`, `services`, `models`.

@@ -1,8 +1,10 @@
 import asyncHandler from '../utils/asyncHandler.js';
 import {
   addProductService,
+  deleteProductService,
   getProductDetailsService,
   listProductsService,
+  updateProductService,
 } from '../services/productService.js';
 
 export const addProduct = asyncHandler(async (req, res) => {
@@ -33,5 +35,25 @@ export const listProducts = asyncHandler(async (req, res) => {
 
 export const getProductById = asyncHandler(async (req, res) => {
   const product = await getProductDetailsService(Number(req.params.id));
+  res.json(product);
+});
+
+export const updateProduct = asyncHandler(async (req, res) => {
+  const { name, description, price, category, imageUrl, stock, rating } = req.body;
+  const product = await updateProductService({
+    id: Number(req.params.id),
+    name,
+    description,
+    price,
+    category,
+    imageUrl,
+    stock,
+    rating,
+  });
+  res.json(product);
+});
+
+export const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await deleteProductService(Number(req.params.id));
   res.json(product);
 });

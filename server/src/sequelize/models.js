@@ -35,6 +35,11 @@ export const User = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+    role: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      defaultValue: 'customer',
+    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

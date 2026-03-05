@@ -52,3 +52,36 @@ export const getProductById = async (id) => {
   const { rows } = await query(sql, [id]);
   return rows[0] || null;
 };
+
+export const updateProductById = async ({
+  id,
+  name,
+  description,
+  price,
+  category,
+  imageUrl,
+  stock,
+  rating,
+}) => {
+  const sql = `
+    UPDATE products
+    SET
+      name = $2,
+      description = $3,
+      price = $4,
+      category = $5,
+      image_url = $6,
+      stock = $7,
+      rating = $8
+    WHERE id = $1
+    RETURNING *
+  `;
+  const { rows } = await query(sql, [id, name, description, price, category, imageUrl, stock, rating]);
+  return rows[0] || null;
+};
+
+export const deleteProductById = async (id) => {
+  const sql = 'DELETE FROM products WHERE id = $1 RETURNING *';
+  const { rows } = await query(sql, [id]);
+  return rows[0] || null;
+};
